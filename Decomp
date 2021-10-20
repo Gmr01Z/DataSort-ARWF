@@ -1,0 +1,42 @@
+#勇敢牛牛，不怕困难！！！
+#Fri Oct  8 08:38:24 2021
+
+import pandas as pd
+import numpy as np
+from statsmodels.tsa.seasonal import seasonal_decompose
+
+df = pd.read_csv("abs.csv")
+
+
+
+ECdif = df[["Yr", "Ecdif"]]
+ECgr = df[["Yr","Ecgr"]]
+Kdif = df[["Yr", "Kdif"]]
+Kgr = df[["Yr", "Kgr"]]
+
+dta = []
+dta.append(ECdif)
+dta.append(ECgr)
+dta.append(Kdif)
+dta.append(Kgr)
+
+names = ['ECdif', 'ECgr', 'Kdif', 'Kgr']
+
+for i in range(0, len(dta)):
+    dta[i].set_index("Yr", inplace = True)
+    dta[i].index = pd.to_datetime(dta[i].index)
+    dta[i].dropna(inplace = True)
+    
+    
+resultECdif = seasonal_decompose(ECdif['Ecdif'], model = 'multiplicable', period=12)
+resultECgr = seasonal_decompose(ECgr['Ecgr'], model = 'multiplicable', period=12)    
+resultKdif = seasonal_decompose(Kdif['Kdif'], model = 'multiplicable', period=12)
+resultKgr = seasonal_decompose(Kgr['Kgr'], model = 'multiplicable', period=12)
+
+resultECdif.plot()
+resultECgr.plot()
+resultKdif.plot()
+resultKgr.plot()
+
+
+
