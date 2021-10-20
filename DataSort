@@ -1,0 +1,81 @@
+#勇敢牛牛，不怕困难！！！
+#Sun Oct 10 15:48:53 2021
+
+import pandas as pd
+import glob
+import csv
+
+arr = []
+names = ["Canada","Mexico","United States","Argentina","Brazil","Chile",
+         "Colombia","Ecuador","Peru","Trinidad and Tobago","Venezuela",
+         "Austria","Belgium","Bulgaria","Cyprus","Czech Republic",
+         "Denmark","Finland","France","Germany","Greece","Hungary",
+         "Iceland","Ireland","Italy","Luxembourg","Netherlands","Norway",
+         "Poland","Portugal","Romania","Slovakia","Spain","Sweden",
+         "Switzerland","Turkey","United Kingdom","Iran","Iraq","Israel",
+         "Kuwait","Oman","Qatar","Saudi Arabia","United Arab Emirates",
+         "Algeria","Egypt","Morocco","South Africa",
+         "Africa Eastern and Southern","Africa Western and Central",
+         "Australia","China","Hong Kong SAR, China","India","Indonesia",
+         "Japan","Malaysia","New Zealand","Pakistan","Philippines",
+         "Singapore","South Korea","Sri Lanka","Thailand","Vietnam"]
+files = glob.glob("*.csv")    
+for n in files :
+    arr.append(pd.read_csv(n).values)
+
+def creatArr(row,col):
+    arr = [[0 for i in range(col)]for j in range(row)]
+    return arr
+
+def insert(val, arr, num):
+    for i in range(0,len(val)):
+        if(i != len(val)-1):
+            arr[i][num] = val[i+1]
+    return arr
+
+def find(str, arr):
+    for i in range(0, len(arr)):
+        if(arr[i][0]==str):
+            return i
+        
+def assignNames(names, arr):
+    for i in range(0, len(arr[0])):
+        arr[0][i] = names[+1]
+    return arr
+
+def toCSV(arr,name):
+    dataframe = pd.DataFrame(arr)
+    csv = ".csv"
+    path = name + csv
+    with open(path, "a") as csv_file:
+        dataframe.to_csv(path_or_buf = csv_file, header = ["Yr","EC","GDP","GNI","POP","Urbanization","UrbanPOP"], index=False, line_terminator='\n')
+
+def addYrs(arr):
+    cur = 1965
+    for i in range(0, len(arr)):
+        arr[i][0] = cur
+        cur += 1
+    return arr
+
+def drop(arr):
+    for i in range(len(arr)-1, -1, -1):
+        for j in range(len(arr[0])-1, -1, -1):
+            print(i,j)
+            if(arr[i][j] == ".."):
+                arr.pop(i)
+                break
+    return arr
+    
+def act(str, arr):
+    data = creatArr(56,7)
+    data = addYrs(data)
+    for i in range(0,6):
+        num = find(str, arr[i])
+        data = insert(arr[i][num], data, i+1)
+        
+        print(str, i)
+    return data
+
+for i in range(0, len(names)):
+    data = act(names[i], arr)
+    toCSV(data, names[i])
